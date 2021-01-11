@@ -1,0 +1,15 @@
+{
+  "name": "@paychex/core-browser",
+  "version": "0.1.0",
+  "description": "Provides agnostic JavaScript functionality for use in all browser-based Paychex applications.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Paychex",
+  "license": "ISC",
+  "scripts": {
+      "build": "rollup -c"
+  },
+  "peerDependencies": {
+      "@paychex/core": "^0.5.0"
+  }
+}
