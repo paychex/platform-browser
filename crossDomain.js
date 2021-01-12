@@ -69,6 +69,14 @@ function listenOnPort(port, callback) {
 /**
  * Creates an EventBus to enable cross-origin communication.
  *
+ * **IMPORTANT!** Message arguments must be serializable as JSON. If not, the `fire`
+ * method will return a rejected Promise. For example:
+ *
+ * ```js
+ * await bus.fire('message', undefined); // throws error
+ * await bus.fire('message', null); // okay
+ * await bus.fire('message', { key: undefined }); // okay
+ * ```
  * @function crossDomain
  * @param {string|string[]} urlOrHosts If called from a parent window, the URL of the iframe to load.
  * If called from that loaded iframe, the origins the parent is allowed to load the iframe from.
