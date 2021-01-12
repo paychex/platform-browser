@@ -77,14 +77,14 @@ function listenOnPort(port, callback) {
  * await bus.fire('message', null); // okay
  * await bus.fire('message', { key: undefined }); // okay
  * ```
- * @function crossDomain
+ * @function eventBus
  * @param {string|string[]} urlOrHosts If called from a parent window, the URL of the iframe to load.
  * If called from that loaded iframe, the origins the parent is allowed to load the iframe from.
  * @returns {EventBus} An EventBus that can be used to send messages between the two origins.
  * @example
  * // parent (hosting) page
  * // http://my.domain.com
- * const bus = crossDomain('http://some.other-domain.com');
+ * const bus = eventBus('http://some.other-domain.com');
  * bus.on('response', async function handler(arg1, arg2) {
  *   console.log(`received response: ${arg1}, ${arg2}`);
  * });
@@ -93,14 +93,14 @@ function listenOnPort(port, callback) {
  * // child (hosted) page
  * // http://some.other-domain.com
  * const store = localStore();
- * const bus = crossDomain(['http://*.domain.com']);
+ * const bus = eventBus(['http://*.domain.com']);
  * bus.on('message', async function handler() {
  *   const arg1 = await store.get('key');
  *   const arg2 = await someAsyncOperation(arg1);
  *   await bus.fire('response', arg1, arg2);
  * });
  */
-export default function crossDomain(urlOrHosts) {
+export default function crossOriginEventBus(urlOrHosts) {
 
     function SendMessagePromise(resolve, reject) {
         const transfers = [this.channel.port2].concat(this.envelope.transfers);
