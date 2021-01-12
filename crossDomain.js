@@ -2,10 +2,6 @@ import { eventBus } from '@paychex/core/index.js';
 import { error, fatal } from '@paychex/core/errors/index.js';
 import { manualReset } from '@paychex/core/signals/index.js';
 
-function isNotUndefined(value) {
-    return value !== undefined;
-}
-
 function toTransferable(thing) {
     const string = JSON.stringify(thing);
     if (typeof string !== 'string')
@@ -14,7 +10,7 @@ function toTransferable(thing) {
 }
 
 async function toTransferables(args) {
-    const promises = args.map(toTransferable).filter(isNotUndefined);
+    const promises = args.map(toTransferable);
     return await Promise.all(promises);
 }
 
