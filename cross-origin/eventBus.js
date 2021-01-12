@@ -44,17 +44,12 @@ function matches(rx) {
     return rx.test(String(this));
 }
 
-async function success(res) {
-    const envelope = await toEnvelope('success', res);
+async function sendMessageResponse(status, res) {
+    const envelope = await toEnvelope(status, res);
     this.postMessage(envelope, envelope.transfers);
 }
 
-async function failure(err) {
-    const envelope = await toEnvelope('failure', err);
-    this.postMessage(envelope, envelope.transfers);
-}
-
-async function onMessageResponse(e) {
+async function handleMessageResponse(e) {
     const { message, args } = await fromEnvelope(e.data);
     message === 'success' ?
         this.resolve(args[0]) :
@@ -104,7 +99,7 @@ export default function crossOriginEventBus(urlOrHosts) {
 
     function SendMessagePromise(resolve, reject) {
         const transfers = [this.channel.port2].concat(this.envelope.transfers);
-        const messageHandler = onMessageResponse.bind({ resolve, reject });
+        const messageHandler = handleMessageResponse.bind({ resolve, reject });
         listenOnPort(this.channel.port1, messageHandler);
         port.postMessage(this.envelope, transfers);
     }
@@ -120,8 +115,8 @@ export default function crossOriginEventBus(urlOrHosts) {
         await signal.ready();
         const { message, args } = await fromEnvelope(e.data);
         bus.fire(message, ...args).then(
-            success.bind(e.ports[0]),
-            failure.bind(e.ports[0]),
+            sendMessageResponse.bind(e.ports[0], 'success'),
+            sendMessageResponse.bind(e.ports[0], 'failure'),
         );
     }
 
