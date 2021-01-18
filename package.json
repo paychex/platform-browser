@@ -1,15 +1,45 @@
 {
-    "name": "@paychex/core-browser",
-    "version": "0.2.0",
-    "description": "Provides agnostic JavaScript functionality for use in all browser-based Paychex applications.",
+    "name": "@paychex/platform-browser",
+    "version": "1.0.0",
+    "description": "Provides agnostic JavaScript functionality for use in all browser-based applications.",
     "main": "index.js",
-    "keywords": [],
+    "keywords": [
+        "paychex",
+        "browser",
+        "cross-origin",
+        "stores"
+    ],
+    "license": "Apache-2.0",
+    "type": "module",
     "author": "Paychex",
-    "license": "ISC",
-    "scripts": {
-        "build": "rollup -c"
+    "contributors": [
+        {
+            "name": "Dan Barnes",
+            "email": "dbarnes1@paychex.com"
+        }
+    ],
+    "devDependencies": {
+        "docdash": "^1.2.0",
+        "expect": "^26.0.1",
+        "jsdoc": "^3.6.4",
+        "c8": "^7.3.5",
+        "mocha": "^7.1.2",
+        "@babel/core": "^7.12.9",
+        "@babel/polyfill": "^7.12.1",
+        "@babel/preset-env": "^7.12.7",
+        "core-js": "^2.6.12",
+        "rollup": "^0.65.2",
+        "rollup-plugin-babel": "^4.4.0",
+        "rollup-plugin-commonjs": "^9.3.4",
+        "rollup-plugin-node-resolve": "^3.4.0"
     },
-    "peerDependencies": {
+    "scripts": {
+        "build": "rollup -c",
+        "test": "mocha --recursive",
+        "coverage": "c8 --reporter=html mocha --recursive",
+        "docs": "jsdoc -c jsdoc.json -R README.md"
+    },
+    "dependencies": {
         "@paychex/core": "^0.5.0"
     }
 }
