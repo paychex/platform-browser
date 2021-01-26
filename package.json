@@ -40,6 +40,6 @@
         "docs": "jsdoc -c jsdoc.json -R README.md"
     },
     "dependencies": {
-        "@paychex/core": "^0.5.0"
+        "@paychex/core": "^1.0.0"
     }
 }
