@@ -2,7 +2,12 @@
     "name": "@paychex/platform-browser",
     "version": "1.0.1",
     "description": "Provides agnostic JavaScript functionality for use in all browser-based applications.",
-    "main": "index.js",
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "files": [
+        "dist",
+        "docs"
+    ],
     "keywords": [
         "paychex",
         "browser",
@@ -10,7 +15,6 @@
         "stores"
     ],
     "license": "Apache-2.0",
-    "type": "module",
     "author": "Paychex",
     "contributors": [
         {
@@ -19,27 +23,32 @@
         }
     ],
     "devDependencies": {
+        "@babel/core": "^7.13.1",
+        "@babel/plugin-proposal-class-properties": "^7.13.0",
+        "@babel/preset-env": "^7.13.5",
+        "@rollup/plugin-babel": "^5.3.0",
+        "@rollup/plugin-commonjs": "^17.1.0",
+        "@rollup/plugin-node-resolve": "^11.2.0",
+        "c8": "^7.3.5",
         "docdash": "^1.2.0",
         "expect": "^26.0.1",
         "jsdoc": "^3.6.4",
-        "c8": "^7.3.5",
-        "mocha": "^7.1.2",
-        "@babel/core": "^7.12.9",
-        "@babel/polyfill": "^7.12.1",
-        "@babel/preset-env": "^7.12.7",
-        "core-js": "^2.6.12",
-        "rollup": "^0.65.2",
-        "rollup-plugin-babel": "^4.4.0",
-        "rollup-plugin-commonjs": "^9.3.4",
-        "rollup-plugin-node-resolve": "^3.4.0"
+        "mocha": "^8.3.0",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.39.1",
+        "rollup-plugin-node-polyfills": "^0.2.1",
+        "rollup-plugin-terser": "^7.0.2"
     },
     "scripts": {
-        "build": "rollup -c",
         "test": "mocha --recursive",
-        "coverage": "c8 --reporter=html mocha --recursive",
-        "docs": "jsdoc -c jsdoc.json -R README.md"
+        "coverage": "c8 --exclude=types --exclude=test --reporter=html mocha --recursive",
+        "docs": "jsdoc -c jsdoc.json",
+        "build": "rollup -c",
+        "clean": "rimraf dist docs coverage",
+        "preversion": "npm run clean && npm run docs && npm run build",
+        "prepublish": "c8 --exclude=types --exclude=test --reporter=html --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 mocha --recursive"
     },
     "dependencies": {
-        "@paychex/core": "^1.0.0"
+        "@paychex/core": "^2.0.4"
     }
 }

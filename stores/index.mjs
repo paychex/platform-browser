@@ -1,9 +1,33 @@
-import { htmlStore } from '@paychex/core/stores/index.js';
+import { stores } from '@paychex/core';
+import { stores as Types } from '@paychex/core/dist/esm/types.mjs';
+import { IndexedDBConfiguration } from '../types/stores.mjs';
+
+class Store extends Types.Store {}
+class Unused extends IndexedDBConfiguration {}
 
 /**
  * Provides methods for storing information on the client's
  * machine. The persistence period will vary based on the
  * storage type and configuration.
+ *
+ * ## Importing
+ *
+ * ```es
+ * import { stores } from '@paychex/platform-browser';
+ * ```
+ *
+ * ```cjs
+ * const { stores } = require('@paychex/platform-browser');
+ * ```
+ *
+ * ```amd
+ * define(['@paychex/platform-browser'], function({ stores }) { ... });
+ * require(['@paychex/platform-browser'], function({ stores }) { ... });
+ * ```
+ *
+ * ```iife
+ * const { stores } = window['@paychex/platform-browser'];
+ * ```
  *
  * @module stores
  */
@@ -22,18 +46,17 @@ import { htmlStore } from '@paychex/core/stores/index.js';
  * @returns {Store} A Store backed by the browser's
  * localStorage Storage provider.
  * @example
- * import { localStore } from '@paychex/platform-browser/stores';
- * import { withPrefix } from '@paychex/core/stores/utils';
  * import { user } from '~/currentUser';
  *
- * const persistentData = withPrefix(localStore(), user.guid);
+ * const store = browser.stores.localStore();
+ * const persistentData = core.stores.utils.withPrefix(store, user.guid);
  *
  * export async function loadSomeData() {
  *   return await persistentData.get('some.key');
  * }
  */
 export function localStore(provider = localStorage) {
-    return htmlStore(provider);
+    return stores.htmlStore(provider);
 }
 
 /**
@@ -52,32 +75,18 @@ export function localStore(provider = localStorage) {
  * @returns {Store} A Store backed by the browser's
  * sessionStorage Storage provider.
  * @example
- * import { sessionStore } from '@paychex/platform-browser/stores';
- * import { withPrefix } from '@paychex/core/stores/utils';
  * import { user } from '~/currentUser';
  *
- * const store = sessionStore();
- * const data = withPrefix(store, user.guid);
+ * const store = browser.stores.sessionStore();
+ * const data = core.stores.utils.withPrefix(store, user.guid);
  *
  * export async function loadSomeData() {
  *   return await data.get('some.key');
  * }
  */
 export function sessionStore(provider = sessionStorage) {
-    return htmlStore(provider);
+    return stores.htmlStore(provider);
 }
-
-/**
- * @global
- * @typedef {Object} IndexedDBConfiguration
- * @property {string} [database='@paychex'] The database to
- * open. Will be created if it doesn't exist.
- * @property {number} [version=1] The version of the store
- * to access. You can overwrite a previously created store
- * by increasing the version number.
- * @property {string} store The store name to use. Will be
- * created if it doesn't exist in the database.
- */
 
 function promisify(object, success, error) {
     return new Promise((resolve, reject) => {
@@ -103,9 +112,7 @@ const dbs = new Map();
  * the IndexedDB store to be used.
  * @returns {Store} A Store backed by IndexedDB.
  * @example
- * import { indexedDB } from '@paychex/platform-browser/stores'
- *
- * const reports = indexedDB({store: 'reports'});
+ * const reports = stores.indexedDB({store: 'reports'});
  *
  * export async function loadReport(id) {
  *   const result = await someDataCall(id);
@@ -163,14 +170,14 @@ export function indexedDB({
     function createStore(e) {
         const db = e.target.result;
         db.createObjectStore(table);
-        const stores = db.objectStoreNames;
-        Array.prototype.filter.call(stores, isLowerVersion)
+        const names = db.objectStoreNames;
+        Array.prototype.filter.call(names, isLowerVersion)
             .forEach(db.deleteObjectStore, db);
     }
 
     function upgradeIfStoreNotFound(db) {
-        const stores = db.objectStoreNames;
-        if (Array.prototype.includes.call(stores, table)) {
+        const names = db.objectStoreNames;
+        if (Array.prototype.includes.call(names, table)) {
             databases.set(database, db);
         } else {
             return increment().then(upgradeIfStoreNotFound);

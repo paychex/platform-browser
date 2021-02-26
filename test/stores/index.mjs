@@ -1,10 +1,10 @@
 import expect from 'expect';
-import { spy } from '@paychex/core/test/utils.js';
+import { spy } from '@paychex/core/test/utils.mjs';
 import {
     localStore,
     sessionStore,
     indexedDB,
-} from '../../stores/index.js';
+} from '../../stores/index.mjs';
 
 describe('stores', () => {
 

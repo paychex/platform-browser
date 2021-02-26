@@ -1,40 +1,60 @@
-const babel = require('rollup-plugin-babel');
-const commonjs = require('rollup-plugin-commonjs');
-const resolve = require('rollup-plugin-node-resolve');
+const { nodeResolve } = require("@rollup/plugin-node-resolve");
+const { terser } = require("rollup-plugin-terser");
+const polyfills = require('rollup-plugin-node-polyfills');
+const commonjs = require('@rollup/plugin-commonjs');
+const { babel } = require("@rollup/plugin-babel");
 
-module.exports = {
-    input: 'index.js',
-    preserveSymlinks: true,
-    external: ['crypto'],
-    output: [{
-        dir: 'dist',
-        format: 'iife',
-        name: 'PlatformBrowser',
-        file: 'platform-browser.iife.js'
-    }, {
-        dir: 'dist',
-        format: 'umd',
-        name: 'PlatformBrowser',
-        file: 'platform-browser.umd.js'
-    }],
-    plugins: [
-        babel({
-            exclude: [/node_modules/, /\/core-js\//], // prevents dependency cycles
-            presets: [
-                ['@babel/preset-env', {
-                    corejs: 2,
-                    modules: false, // required by rollup
-                    useBuiltIns: 'usage',
-                    targets: 'last 2 versions, not dead, > 1% in US, IE 11'
-                }],
-            ]
-        }),
-        resolve({
-            browser: true,
-            preferBuiltins: true
-        }),
-        commonjs({
-            include: /node_modules/,
-        }),
-    ],
-};
+const pkg = require('./package.json');
+
+module.exports = [
+    {
+        // UMD
+        input: 'index.mjs',
+        plugins: [
+            nodeResolve({
+                browser: true,
+                preferBuiltins: false,
+            }),
+            commonjs({
+                include: /node_modules/,
+            }),
+            babel({
+                babelHelpers: "bundled",
+            }),
+            polyfills(),
+            terser(),
+        ],
+        output: {
+            file: `dist/paychex.platform-browser.min.js`,
+            format: "umd",
+            name: pkg.name,
+            esModule: false,
+            exports: "named",
+            sourcemap: true,
+        },
+    },
+    // ESM and CJS
+    {
+        input: 'index.mjs',
+        plugins: [
+            nodeResolve(),
+            commonjs({
+                include: /node_modules/,
+            })
+        ],
+        output: [
+            {
+                dir: "dist/esm",
+                format: "esm",
+                exports: "named",
+                sourcemap: true,
+            },
+            {
+                dir: "dist/cjs",
+                format: "cjs",
+                exports: "named",
+                sourcemap: true,
+            },
+        ],
+    },
+];

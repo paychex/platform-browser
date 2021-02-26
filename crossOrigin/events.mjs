@@ -1,17 +1,12 @@
-import { eventBus } from '@paychex/core/index.js';
-import { error, fatal } from '@paychex/core/errors/index.js';
-import { manualReset } from '@paychex/core/signals/index.js';
+import { events, errors, signals } from '@paychex/core';
+import { CrossOriginEventBus } from '../types/events.mjs';
 
-/**
- * Contains utilities to assist with cross-origin communications.
- *
- * @module cross-origin
- */
+class Unused extends CrossOriginEventBus {}
 
 function toTransferable(thing) {
     const string = JSON.stringify(thing);
     if (typeof string !== 'string')
-        throw error('Message arguments must be serializable as JSON.', fatal());
+        throw errors.error('Message arguments must be serializable as JSON.', errors.fatal());
     return new Blob(string.split('')).arrayBuffer();
 }
 
@@ -75,6 +70,19 @@ function listenOnPort(port, callback) {
 /**
  * Creates an EventBus to enable cross-origin communication.
  *
+ * ```js
+ * import { crossOrigin } from '@paychex/platform-browser';
+ *
+ * const bus = crossOrigin.bus({ url: 'http://some.other-domain.com' });
+ *
+ * // listen for messages from some.other-domain.com
+ * bus.on('some-message', async function handle(arg1, arg2) { ... });
+ *
+ * // send messages to some.other-domain.com and process return values
+ * await bus.fire('some-event', 'abc', 123)
+ *   .then((results) => { ... });
+ * ```
+ *
  * **IMPORTANT!** Message arguments must be serializable as JSON. If not, the `fire`
  * method will return a rejected Promise. For example:
  *
@@ -83,38 +91,48 @@ function listenOnPort(port, callback) {
  * await bus.fire('message', null); // okay
  * await bus.fire('message', { key: undefined }); // okay
  * ```
- * @function eventBus
- * @static
+ * @function module:crossOrigin.bus
  * @param {object} [params] Values used to customize the EventBus's behavior.
  * @param {string} [params.url] If provided, the URL of the iframe to load.
  * @param {string[]} [params.origins=['*']] The origins allowed to communicate with this bus.
  * @param {string} [params.key=''] A unique key to identify this bus. The child and parent values must match
  * in order for any messages to be sent.
- * @returns {EventBus} An EventBus that can be used to send messages between the two origins. The
+ * @returns {CrossOriginEventBus} An EventBus that can be used to send messages between the two origins. The
  * bus will have a new method, `dispose`, that can be used to tear down the connection.
  * @example
- * import eventBus from '@paychex/platform-browser/cross-origin/eventBus.js';
- *
  * // parent (hosting) page
  * // http://my.domain.com
- * const bus = eventBus({ url: 'http://some.other-domain.com' });
+ *
+ * const bus = events.bus({ url: 'http://some.other-domain.com' });
+ *
+ * // listen for messages from other domain
  * bus.on('response', async function handler(arg1, arg2) {
  *   console.log(`received response: ${arg1}, ${arg2}`);
  * });
- * bus.fire('message'); // can also send additional event args
- * bus.dispose(); // destroy the bus at any time
  *
+ * // send messages to the other domain
+ * await bus.fire('message', 'abc', 123).then(
+ *   (results) => console.log(results),
+ *   (error) => console.error(error),
+ * );
+ *
+ * // destroy the connection at any time
+ * bus.dispose();
+ * @example
  * // child (hosted) page
  * // http://some.other-domain.com
- * const store = localStore();
- * const bus = eventBus({ origins: ['http://*.domain.com'] });
- * bus.on('message', async function handler() {
- *   const arg1 = await store.get('key');
- *   const arg2 = await someAsyncOperation(arg1);
+ *
+ * const store = stores.localStore();
+ * const bus = events.bus({ origins: ['http://*.domain.com'] });
+ *
+ * // listen for messages from parent parge
+ * bus.on('message', async function handler(key, param) {
+ *   const arg1 = await store.get(key);
+ *   const arg2 = await someAsyncOperation(arg1, param);
  *   await bus.fire('response', arg1, arg2);
  * });
  */
-export default function crossOriginEventBus({
+export function bus({
     key = '',
     url = null,
     origins = ['*'],
@@ -138,7 +156,7 @@ export default function crossOriginEventBus({
         await signal.ready();
         const { message, args, origin } = await fromEnvelope(e.data);
         if (verify(origin))
-            await bus.fire(message, ...args).then(
+            await hub.fire(message, ...args).then(
                 sendMessageResponse.bind(e.ports[0], 'success'),
                 sendMessageResponse.bind(e.ports[0], 'failure'),
             );
@@ -161,8 +179,8 @@ export default function crossOriginEventBus({
     let port,
         frame;
 
-    const bus = eventBus();
-    const signal = manualReset(false);
+    const hub = events.bus();
+    const signal = signals.manualReset(false);
     const CONNECT = `connect:${key}`;
     const allowed = origins.map(asRegExp);
     const verify = (origin) => allowed.some(matches, origin);
@@ -180,6 +198,6 @@ export default function crossOriginEventBus({
         signal.set();
     }
 
-    return { ...bus, fire, dispose };
+    return { ...hub, fire, dispose };
 
 }
