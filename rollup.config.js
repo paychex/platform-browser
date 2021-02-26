@@ -33,28 +33,41 @@ module.exports = [
             sourcemap: true,
         },
     },
-    // ESM and CJS
+    // ESM
     {
         input: 'index.mjs',
+        external: ['@paychex/core'],
         plugins: [
             nodeResolve(),
             commonjs({
                 include: /node_modules/,
             })
         ],
-        output: [
-            {
-                dir: "dist/esm",
-                format: "esm",
-                exports: "named",
-                sourcemap: true,
-            },
-            {
-                dir: "dist/cjs",
-                format: "cjs",
-                exports: "named",
-                sourcemap: true,
-            },
+        output: {
+            dir: "dist/esm",
+            format: "esm",
+            exports: "named",
+            sourcemap: true,
+        },
+    },
+    // CJS
+    {
+        input: 'index.mjs',
+        external: ['@paychex/core'],
+        plugins: [
+            nodeResolve(),
+            commonjs({
+                include: /node_modules/,
+            })
         ],
+        output: {
+            dir: "dist/cjs",
+            format: "cjs",
+            exports: "named",
+            sourcemap: true,
+            paths: {
+                'lodash-es': 'lodash'
+            }
+        },
     },
 ];

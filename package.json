@@ -48,7 +48,7 @@
         "preversion": "npm run clean && npm run docs && npm run build",
         "prepublish": "c8 --exclude=types --exclude=test --reporter=html --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 mocha --recursive"
     },
-    "dependencies": {
-        "@paychex/core": "^2.0.4"
+    "peerDependencies": {
+        "@paychex/core": "^2.1.1"
     }
 }
