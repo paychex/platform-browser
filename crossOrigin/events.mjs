@@ -1,7 +1,6 @@
 import { events, errors, signals } from '@paychex/core';
-import { CrossOriginEventBus } from '../types/events.mjs';
 
-class Unused extends CrossOriginEventBus {}
+import '../types/events.mjs';
 
 function toTransferable(thing) {
     const string = JSON.stringify(thing);

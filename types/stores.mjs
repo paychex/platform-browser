@@ -1,3 +1,5 @@
+import '@paychex/core/types/stores.mjs';
+
 /**
  * Contains information used to construct an IndexedDB instance.
  *

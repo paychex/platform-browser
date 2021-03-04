@@ -6,7 +6,8 @@
     "module": "dist/esm/index.js",
     "files": [
         "dist",
-        "docs"
+        "docs",
+        "types"
     ],
     "keywords": [
         "paychex",
@@ -49,6 +50,6 @@
         "prepublish": "c8 --exclude=types --exclude=test --reporter=html --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 mocha --recursive"
     },
     "peerDependencies": {
-        "@paychex/core": "^2.1.1"
+        "@paychex/core": "^2.2.3"
     }
 }

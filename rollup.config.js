@@ -44,6 +44,7 @@ module.exports = [
     // ESM
     {
         input: 'index.mjs',
+        treeshake: false,
         external,
         plugins: [
             nodeResolve(),
@@ -61,6 +62,7 @@ module.exports = [
     // CJS
     {
         input: 'index.mjs',
+        treeshake: false,
         external,
         plugins: [
             nodeResolve(),

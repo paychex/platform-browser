@@ -1,4 +1,4 @@
-import { events as Types } from '@paychex/core/dist/esm/types.mjs';
+import { EventBus } from '@paychex/core/types/events.mjs';
 
 /**
  * An EventBus instance that can communicate across origins.
@@ -10,7 +10,7 @@ import { events as Types } from '@paychex/core/dist/esm/types.mjs';
  * @hideconstructor
  * @extends EventBus
  */
-export class CrossOriginEventBus extends Types.EventBus {
+export class CrossOriginEventBus extends EventBus {
 
     /**
      * Permanently closes the connection between the parent and child iframes.

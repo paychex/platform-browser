@@ -1,9 +1,6 @@
 import { stores } from '@paychex/core';
-import { stores as Types } from '@paychex/core/dist/esm/types.mjs';
-import { IndexedDBConfiguration } from '../types/stores.mjs';
 
-class Store extends Types.Store {}
-class Unused extends IndexedDBConfiguration {}
+import '../types/stores.mjs';
 
 /**
  * Provides methods for storing information on the client's
