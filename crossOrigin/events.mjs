@@ -102,7 +102,7 @@ function listenOnPort(port, callback) {
  * // parent (hosting) page
  * // http://my.domain.com
  *
- * const bus = events.bus({ url: 'http://some.other-domain.com' });
+ * const bus = crossOrigin.bus({ url: 'http://some.other-domain.com' });
  *
  * // listen for messages from other domain
  * bus.on('response', async function handler(arg1, arg2) {
@@ -122,7 +122,7 @@ function listenOnPort(port, callback) {
  * // http://some.other-domain.com
  *
  * const store = stores.localStore();
- * const bus = events.bus({ origins: ['http://*.domain.com'] });
+ * const bus = crossOrigin.bus({ origins: ['http://*.domain.com'] });
  *
  * // listen for messages from parent parge
  * bus.on('message', async function handler(key, param) {
