@@ -164,7 +164,6 @@ export function bus({
     async function connectChild(e) {
         if (verify(e.origin) && e.data === CONNECT) {
             listenOnPort(port = e.ports[0], receiveMessage);
-            globalThis.removeEventListener('message', connectChild);
             signal.set();
         }
     }
