@@ -9,6 +9,14 @@
         "docs",
         "types"
     ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/paychex/platform-browser.git"
+    },
+    "bugs": {
+        "url": "https://github.com/paychex/platform-browser/issues"
+    },
+    "homepage": "https://paychex.github.io/platform-browser/",
     "keywords": [
         "paychex",
         "browser",
