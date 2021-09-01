@@ -15,8 +15,17 @@ export class CrossOriginEventBus extends EventBus {
     /**
      * Permanently closes the connection between the parent and child iframes.
      *
+     * @function CrossOriginEventBus#dispose
+     */
+    dispose() {}
+
+    /**
+     * The IFrame created for the cross-origin page. This is only available on
+     * parent (container) instances.
+     *
+     * @type {Window|undefined}
      * @memberof CrossOriginEventBus#
      */
-    dispose() { }
+    frame = undefined
 
 }

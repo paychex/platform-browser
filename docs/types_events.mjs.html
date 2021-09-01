@@ -29,7 +29,7 @@
     
     <input type="text" id="nav-search" placeholder="Search" />
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/paychex/platform-browser" target="_blank" class="menu-item" id="repository" >Source Code</a></h2><h3>Classes</h3><ul><li><a href="CrossOriginEventBus.html">CrossOriginEventBus</a></li><li><a href="IndexedDBConfiguration.html">IndexedDBConfiguration</a></li></ul><h3>Modules</h3><ul><li><a href="module-crossOrigin.html">crossOrigin</a><ul class='methods'><li data-type='method'><a href="module-crossOrigin.html#.bus">bus</a></li></ul></li><li><a href="module-stores.html">stores</a><ul class='methods'><li data-type='method'><a href="module-stores.html#.indexedDB">indexedDB</a></li><li data-type='method'><a href="module-stores.html#.localStore">localStore</a></li><li data-type='method'><a href="module-stores.html#.sessionStore">sessionStore</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/paychex/platform-browser" target="_blank" class="menu-item" id="repository" >Source Code</a></h2><h3>Classes</h3><ul><li><a href="CrossOriginEventBus.html">CrossOriginEventBus</a><ul class='methods'><li data-type='method'><a href="CrossOriginEventBus.html#dispose">dispose</a></li></ul></li><li><a href="IndexedDBConfiguration.html">IndexedDBConfiguration</a></li></ul><h3>Modules</h3><ul><li><a href="module-crossOrigin.html">crossOrigin</a><ul class='methods'><li data-type='method'><a href="module-crossOrigin.html#.bus">bus</a></li></ul></li><li><a href="module-stores.html">stores</a><ul class='methods'><li data-type='method'><a href="module-stores.html#.indexedDB">indexedDB</a></li><li data-type='method'><a href="module-stores.html#.localStore">localStore</a></li><li data-type='method'><a href="module-stores.html#.sessionStore">sessionStore</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -61,9 +61,18 @@ export class CrossOriginEventBus extends EventBus {
     /**
      * Permanently closes the connection between the parent and child iframes.
      *
+     * @function CrossOriginEventBus#dispose
+     */
+    dispose() {}
+
+    /**
+     * The IFrame created for the cross-origin page. This is only available on
+     * parent (container) instances.
+     *
+     * @type {Window|undefined}
      * @memberof CrossOriginEventBus#
      */
-    dispose() { }
+    frame = undefined
 
 }
 </code></pre>

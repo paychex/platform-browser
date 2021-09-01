@@ -196,6 +196,6 @@ export function bus({
         signal.set();
     }
 
-    return { ...hub, fire, dispose };
+    return { ...hub, fire, dispose, frame };
 
 }
