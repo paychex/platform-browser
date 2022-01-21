@@ -15,7 +15,7 @@ const output = {
     esModule: false,
     exports: "named",
     sourcemap: true,
-    banner: `/* ${pkg.name} v${pkg.version} */`,
+    banner: `/*! ${pkg.name} v${pkg.version} */`,
     sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
         return `${pkg.name}/${path.relative(path.resolve('.'), path.resolve(path.dirname(sourcemapPath), relativeSourcePath))}`;
     },
