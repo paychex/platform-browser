@@ -5,6 +5,7 @@ const { terser } = require("rollup-plugin-terser");
 const polyfills = require('rollup-plugin-node-polyfills');
 const commonjs = require('@rollup/plugin-commonjs');
 const { babel } = require("@rollup/plugin-babel");
+const typescript = require('@rollup/plugin-typescript');
 
 const pkg = require('./package.json');
 const external = ['@paychex/core'];
@@ -22,16 +23,13 @@ const output = {
     globals: {
         '@paychex/core': '@paychex/core',
     },
-    paths: {
-        '@paychex/core': '@paychex/core'
-    }
 };
 
 module.exports = [
     {
         // UMD
         external,
-        input: 'index.mjs',
+        input: 'index.ts',
         plugins: [
             nodeResolve({
                 browser: true,
@@ -39,6 +37,9 @@ module.exports = [
             }),
             commonjs({
                 include: /node_modules/,
+            }),
+            typescript({
+                tsconfig: './tsconfig.json',
             }),
             babel({
                 babelHelpers: "bundled",
@@ -48,46 +49,54 @@ module.exports = [
         output: [{
             ...output,
             plugins: [terser()],
-            file: `dist/paychex.platform-browser.min.js`,
+            file: pkg.browser.replace('.js', '.min.js'),
         }, {
             ...output,
-            file: `dist/paychex.platform-browser.js`,
+            file: pkg.browser,
         }],
     },
     // ESM
     {
-        input: 'index.mjs',
+        input: 'index.ts',
         treeshake: false,
         external,
         plugins: [
+            typescript({
+                tsconfig: './tsconfig.json',
+            }),
             nodeResolve(),
             commonjs({
                 include: /node_modules/,
             })
         ],
         output: {
-            dir: "dist/esm",
+            file: pkg.module,
             format: "esm",
             exports: "named",
             sourcemap: true,
+            banner: `/*! ${pkg.name} v${pkg.version} */`,
         },
     },
     // CJS
     {
-        input: 'index.mjs',
+        input: 'index.ts',
         treeshake: false,
         external,
         plugins: [
+            typescript({
+                tsconfig: './tsconfig.json',
+            }),
             nodeResolve(),
             commonjs({
                 include: /node_modules/,
             })
         ],
         output: {
-            dir: "dist/cjs",
+            file: pkg.main,
             format: "cjs",
             exports: "named",
             sourcemap: true,
+            banner: `/*! ${pkg.name} v${pkg.version} */`,
         },
     },
 ];

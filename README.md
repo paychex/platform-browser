@@ -60,5 +60,5 @@ The @paychex/platform-browser library contains functionality separated into vari
 
 name | description
 :--- | :---
-[crossOrigin]{@link module:crossOrigin} | Enables safe asynchronous communication across different origins.
-[stores]{@link module:stores} | Provides browser-specific Stores to persist and retrieve data on the user's machine.
+[crossOrigin]{@link crossOrigin} | Enables safe asynchronous communication across different origins.
+[stores]{@link stores} | Provides browser-specific Stores to persist and retrieve data on the user's machine.
