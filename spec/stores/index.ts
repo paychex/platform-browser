@@ -4,6 +4,7 @@ import {
     localStore,
     sessionStore,
     indexedDB,
+    Store,
 } from '../../stores';
 import { noop } from 'lodash';
 
@@ -80,7 +81,7 @@ describe('stores', () => {
 
         it('returns store interface', () => {
             const store = indexedDB({ store: 'test' });
-            const isMethod = method => typeof store[method] === 'function';
+            const isMethod = (method: keyof Store) => typeof store[method] === 'function';
             expect(['get', 'set', 'delete'].every(isMethod)).toBe(true);
         });
 
@@ -193,7 +194,7 @@ describe('stores', () => {
 
             it('resolves with undefined if key does not exist', done => {
                 const store = indexedDB({ store: 'test' });
-                const request = { result: undefined };
+                const request = { result: undefined } as any;
                 os.get.returns(request);
                 db.objectStoreNames = ['test@1'];
                 openRequest.onsuccess({ target: { result: db } });

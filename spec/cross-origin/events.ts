@@ -3,6 +3,7 @@ import { errors } from '@paychex/core';
 import { Spy, spy } from '@paychex/core/test';
 
 import { bus } from '../../crossOrigin/events';
+import { CrossOriginEventBus } from '../../crossOrigin';
 
 describe('cross-origin', () => {
 
@@ -65,7 +66,7 @@ describe('cross-origin', () => {
 
         it('returns bus instance', () => {
             const hub = bus();
-            ['fire', 'on', 'dispose'].forEach(method => {
+            ['fire', 'on', 'dispose'].forEach((method: keyof CrossOriginEventBus) => {
                 expect(hub[method]).toBeInstanceOf(Function);
             });
         });

@@ -3,8 +3,10 @@ import * as utils from '../../utils';
 import {spy} from "@paychex/core/test";
 
 describe('utils', () => {
+
     describe('svgId', () => {
-        let random;
+
+        let random: any;
 
         beforeEach(() => {
             random = global.Math.random;
